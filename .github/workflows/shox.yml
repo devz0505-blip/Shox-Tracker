@@ -1,13 +1,16 @@
-name: Shox Tracker
+name: SHOX Tracker
 
 on:
   workflow_dispatch:
 
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */4 * * *'
+
+permissions:
+  contents: write
 
 jobs:
-  run:
+  tracker:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,8 +22,16 @@ jobs:
 
       - run: pip install requests
 
-      - run: python shox.py
+      - run: python joyla.py
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Commit last release
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add last_release.txt
+          git commit -m "update last release" || exit 0
+          git push
