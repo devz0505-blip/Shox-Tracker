@@ -30,6 +30,18 @@ r = requests.get(
 
 latest = r.json()["items"][0]
 
+release_id = latest["id"]
+
+try:
+    with open("last_release.txt", "r") as f:
+        last_id = f.read().strip()
+except:
+    last_id = ""
+
+if release_id == last_id:
+    print("Schon gepostet")
+    exit()
+
 name = latest["name"]
 url = latest["external_urls"]["spotify"]
 
@@ -39,3 +51,6 @@ requests.post(
         "content": f"🎵 Neuer Release von SHOX!\n\n{name}\n{url}"
     }
 )
+
+with open("last_release.txt", "w") as f:
+    f.write(release_id)
