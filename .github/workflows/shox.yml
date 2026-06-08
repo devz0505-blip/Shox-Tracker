@@ -22,7 +22,7 @@ jobs:
 
       - run: pip install requests
 
-      - run: python joyla.py
+      - run: python shox.py
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
