@@ -71,7 +71,7 @@ embed = {
 
    "author": {
     "name": "SHOX",
-    "icon_url": "  "
+    "icon_url": "https://raw.githubusercontent.com/devz0505-blip/Shox-Tracker/main/LOGO.png"
 },
 
     "thumbnail": {
