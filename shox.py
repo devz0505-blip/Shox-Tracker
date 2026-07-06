@@ -20,7 +20,6 @@ def get_token():
     print(r.text)
 
     r.raise_for_status()
-
     return r.json()["access_token"]
 
 token = get_token()
@@ -30,11 +29,13 @@ headers = {
 }
 
 r = requests.get(
-    f"https://api.spotify.com/v1/artists/{ARTIST_ID}/albums?include_groups=single,album",
+    f"https://api.spotify.com/v1/artists/{ARTIST_ID}",
     headers=headers
 )
+
 print(r.status_code)
 print(r.text)
+exit()
 
 latest = r.json()["items"][0]
 
