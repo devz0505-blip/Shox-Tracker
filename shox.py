@@ -65,7 +65,7 @@ if release_id == last_id:
 
 embed = {
     "title": "🔥 Neue Release von SHOX!",
-    "description": f"🎵 **{name}**\n\nEine neue {album_type.lower()} von **SHOX** ist jetzt auf Spotify verfügbar."
+    "description": f"🎵 **{name}**\n\nEine neue {album_type.lower()} von **SHOX** ist jetzt auf Spotify verfügbar.",
     "url": url,
     "color": 0x8A2BE2,
 
