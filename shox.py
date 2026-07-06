@@ -19,7 +19,14 @@ def get_token():
     print(r.status_code)
     print(r.text)
 
-    r.raise_for_status()
+   r.raise_for_status()
+data = r.json()
+
+if not data.get("items"):
+    print("Keine Releases gefunden.")
+    exit()
+
+latest = data["items"][0]
     return r.json()["access_token"]
 
 token = get_token()
