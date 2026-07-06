@@ -15,12 +15,13 @@ def get_token():
         data={"grant_type": "client_credentials"},
         auth=(CLIENT_ID, CLIENT_SECRET)
     )
+
     print(r.status_code)
-print(r.text)
+    print(r.text)
 
-r.raise_for_status()
+    r.raise_for_status()
 
-return r.json()["access_token"]
+    return r.json()["access_token"]
 
 token = get_token()
 
