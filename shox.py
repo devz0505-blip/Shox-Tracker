@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-WEBHOOK = "https://discord.com/api/webhooks/1511520888963465376/WHvr_TSWrabk0H8X4k4J0INg6T1JIulx--DvM3ZA2Gls1Gg5IgHK6SgcCVgW1aHYqw0m"
+WEBHOOK = os.environ["DISCORD_WEBHOOK"]
 
 ARTIST_ID = "4qemKfpJPX6zS00wWwUQbZ"
 
