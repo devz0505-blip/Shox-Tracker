@@ -27,6 +27,11 @@ if not data.get("items"):
     exit()
 
 latest = data["items"][0]
+cover = latest["images"][0]["url"]
+release_date = latest["release_date"]
+album_type = latest["album_type"].capitalize()
+name = latest["name"]
+url = latest["external_urls"]["spotify"]
     return r.json()["access_token"]
 
 token = get_token()
