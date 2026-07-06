@@ -1,13 +1,13 @@
 import requests
-import json
 import os
 
 WEBHOOK = os.environ["DISCORD_WEBHOOK"]
 
-ARTIST_ID = "4qemKfpJPX6zS00wWwUQbZ"
+ARTIST_ID = "4qemKfpJPX6zS00WwWUQbZ"
 
 CLIENT_ID = os.environ["SPOTIFY_CLIENT_ID"]
 CLIENT_SECRET = os.environ["SPOTIFY_CLIENT_SECRET"]
+
 
 def get_token():
     r = requests.post(
@@ -16,23 +16,9 @@ def get_token():
         auth=(CLIENT_ID, CLIENT_SECRET)
     )
 
-    print(r.status_code)
-    print(r.text)
-
-   r.raise_for_status()
-data = r.json()
-
-if not data.get("items"):
-    print("Keine Releases gefunden.")
-    exit()
-
-latest = data["items"][0]
-cover = latest["images"][0]["url"]
-release_date = latest["release_date"]
-album_type = latest["album_type"].capitalize()
-name = latest["name"]
-url = latest["external_urls"]["spotify"]
+    r.raise_for_status()
     return r.json()["access_token"]
+
 
 token = get_token()
 
@@ -41,38 +27,93 @@ headers = {
 }
 
 r = requests.get(
-    f"https://api.spotify.com/v1/artists/{ARTIST_ID}",
-    headers=headers
+    f"https://api.spotify.com/v1/artists/{ARTIST_ID}/albums",
+    headers=headers,
+    params={
+        "include_groups": "single,album",
+        "market": "DE",
+        "limit": 1
+    }
 )
 
-print(r.status_code)
-print(r.text)
+r.raise_for_status()
 
-exit()
+data = r.json()
 
-latest = r.json()["items"][0]
+if not data.get("items"):
+    print("Keine Releases gefunden.")
+    exit()
+
+latest = data["items"][0]
 
 release_id = latest["id"]
+name = latest["name"]
+url = latest["external_urls"]["spotify"]
+cover = latest["images"][0]["url"]
+release_date = latest["release_date"]
+album_type = latest["album_type"].capitalize()
 
 try:
     with open("last_release.txt", "r") as f:
         last_id = f.read().strip()
-except:
+except FileNotFoundError:
     last_id = ""
 
 if release_id == last_id:
-    print("Schon gepostet")
+    print("Schon gepostet.")
     exit()
 
-name = latest["name"]
-url = latest["external_urls"]["spotify"]
+embed = {
+    "title": "🔥 Neue Release von SHOX!",
+    "description": f"## 🎵 {name}\nNeue Single von **SHOX** ist jetzt auf Spotify verfügbar.",
+    "url": url,
+    "color": 0x8A2BE2,
+
+   "author": {
+    "name": "SHOX",
+    "icon_url": "https://LINK_ZUM_SHOX_LOGO.png"
+},
+
+    "thumbnail": {
+        "url": cover
+    },
+
+    "image": {
+        "url": cover
+    },
+
+    "fields": [
+        {
+            "name": "📅 Veröffentlichungsdatum",
+            "value": release_date,
+            "inline": True
+        },
+        {
+            "name": "💿 Typ",
+            "value": album_type,
+            "inline": True
+        },
+        {
+            "name": "🎧 Spotify",
+            "value": f"[Jetzt anhören]({url})",
+            "inline": False
+        }
+    ],
+
+    "footer": {
+        "text": "SHOX Release Tracker"
+    }
+}
 
 requests.post(
     WEBHOOK,
     json={
-        "content": f"🎵 Neuer Release von SHOX!\n\n{name}\n{url}"
+        "username": "SHOX Tracker",
+        "embeds": [embed]
     }
 )
 
 with open("last_release.txt", "w") as f:
     f.write(release_id)
+
+print("Neue Release gepostet!")
